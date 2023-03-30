@@ -198,6 +198,12 @@
     class="text-black text-sm bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] px-2 py-1 rounded-md mx-1"
     >Github</a
   >
+  <a
+    href="https://narze.live"
+    target="_blank"
+    class="text-black text-sm bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] px-2 py-1 rounded-md mx-1"
+    >@narze</a
+  >
 </div>
 
 <style lang="postcss">
