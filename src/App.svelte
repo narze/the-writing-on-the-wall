@@ -140,7 +140,7 @@
     <h1
       class="text-6xl mb-4 font-bold text-transparent text-center uppercase bg-clip-text bg-gradient-to-br text-[#eeeeee]"
     >
-      The Writing On The Wall
+      The Writing On The Wall <span class="text-xs normal-case">Beta</span>
     </h1>
   </div>
 
