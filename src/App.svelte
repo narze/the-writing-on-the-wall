@@ -198,12 +198,6 @@
     class="text-black text-sm bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] px-2 py-1 rounded-md mx-1"
     >Github</a
   >
-  <a
-    href="https://twitch.narze.live"
-    target="_blank"
-    class="text-black text-sm bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] px-2 py-1 rounded-md mx-1"
-    >Twitch</a
-  >
 </div>
 
 <style lang="postcss">
