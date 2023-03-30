@@ -12,14 +12,16 @@
   import CircleType from "circletype"
   import Moveable from "svelte-moveable"
   import { Color, ColorInput } from "color-picker-svelte"
+  import { SvgDrawing } from "svg-drawing"
+  import bgImage from "./assets/the-wall.jpg"
 
-  let textColor = new Color("#71CC00")
+  let textColor = new Color("#eeeeee")
   let bgColor = new Color("#000000")
 
-  // import Moveable, { OnScale } from "moveable"
+  let drawArea, drawing
 
-  let title = "ทำงาน"
-  let url = "https://working3times.narze.live/"
+  let title = "writing"
+  let url = "https://the-writing-on-the-wall.narze.live/"
 
   const curve1 = "M 30, 10 C 130,-25 160,-30 270,-25"
   const curve2 = "M 30, 10 C 130,-30 160,-35 270,-25"
@@ -68,202 +70,17 @@
     // console.dir(avatarElm)
   }
 
-  onMount(async () => {
-    dragElement(avatarElm)
-
-    // const moveable = new Moveable(document.body, {
-    //   target: document.querySelector(".element") as HTMLElement,
-    //   // If the container is null, the position is fixed. (default: parentElement(document.body))
-    //   container: document.body,
-    //   draggable: true,
-    //   resizable: true,
-    //   scalable: true,
-    //   rotatable: true,
-    //   warpable: true,
-    //   // Enabling pinchable lets you use events that
-    //   // can be used in draggable, resizable, scalable, and rotateable.
-    //   pinchable: true, // ["resizable", "scalable", "rotatable"]
-    //   origin: true,
-    //   keepRatio: true,
-    //   // Resize, Scale Events at edges.
-    //   edge: false,
-    //   throttleDrag: 0,
-    //   throttleResize: 0,
-    //   throttleScale: 0,
-    //   throttleRotate: 0,
-    // })
-
-    // const moveable = new Moveable(document.body, {
-    //   // If you want to use a group, set multiple targets(type: Array<HTMLElement | SVGElement>).
-    //   target: document.querySelector(".element") as HTMLElement,
-    //   resizable: true,
-    //   draggable: true,
-    //   keepRatio: false,
-    //   throttleResize: 1,
-    //   renderDirections: ["nw", "n", "ne", "w", "e", "sw", "s", "se"],
-    //   edge: true,
-    //   zoom: 1,
-    //   origin: true,
-    //   padding: { left: 0, top: 0, right: 0, bottom: 0 },
-    // })
-
-    // /* draggable */
-    // moveable
-    //   .on("dragStart", ({ target, clientX, clientY }) => {
-    //     console.log("onDragStart", target)
-    //   })
-    //   .on(
-    //     "drag",
-    //     ({
-    //       target,
-    //       transform,
-    //       left,
-    //       top,
-    //       right,
-    //       bottom,
-    //       beforeDelta,
-    //       beforeDist,
-    //       delta,
-    //       dist,
-    //       clientX,
-    //       clientY,
-    //     }) => {
-    //       console.log("onDrag left, top", left, top)
-    //       target!.style.left = `${left}px`
-    //       target!.style.top = `${top}px`
-    //       // console.log("onDrag translate", dist);
-    //       // target!.style.transform = transform;
-    //     }
-    //   )
-    //   .on("dragEnd", ({ target, isDrag, clientX, clientY }) => {
-    //     console.log("onDragEnd", target, isDrag)
-    //   })
-
-    // /* resizable */
-    // moveable
-    //   .on("resizeStart", ({ target, clientX, clientY }) => {
-    //     console.log("onResizeStart", target)
-    //   })
-    //   .on(
-    //     "resize",
-    //     ({ target, width, height, dist, delta, clientX, clientY }) => {
-    //       console.log("onResize", target)
-    //       delta[0] && (target!.style.width = `${width}px`)
-    //       delta[1] && (target!.style.height = `${height}px`)
-    //     }
-    //   )
-    //   .on("resizeEnd", ({ target, isDrag, clientX, clientY }) => {
-    //     console.log("onResizeEnd", target, isDrag)
-    //   })
-
-    // /* scalable */
-    // moveable
-    //   .on("scaleStart", ({ target, clientX, clientY }) => {
-    //     console.log("onScaleStart", target)
-    //   })
-    //   .on(
-    //     "scale",
-    //     ({
-    //       target,
-    //       scale,
-    //       dist,
-    //       delta,
-    //       transform,
-    //       clientX,
-    //       clientY,
-    //     }: OnScale) => {
-    //       console.log("onScale scale", scale)
-    //       target!.style.transform = transform
-    //     }
-    //   )
-    //   .on("scaleEnd", ({ target, isDrag, clientX, clientY }) => {
-    //     console.log("onScaleEnd", target, isDrag)
-    //   })
-
-    // /* rotatable */
-    // moveable
-    //   .on("rotateStart", ({ target, clientX, clientY }) => {
-    //     console.log("onRotateStart", target)
-    //   })
-    //   .on(
-    //     "rotate",
-    //     ({ target, beforeDelta, delta, dist, transform, clientX, clientY }) => {
-    //       console.log("onRotate", dist)
-    //       target!.style.transform = transform
-    //     }
-    //   )
-    //   .on("rotateEnd", ({ target, isDrag, clientX, clientY }) => {
-    //     console.log("onRotateEnd", target, isDrag)
-    //   })
-  })
-
-  let first = true
-
-  $: if (textNode) {
-    if (first) {
-      first = false
-      setTimeout(() => {
-        updateCircleText(title)
-      })
-    } else {
-      updateCircleText(title)
-    }
+  $: if (drawArea) {
+    drawing = new SvgDrawing(drawArea, {penWidth: 3})
   }
 
-  function updateCircleText(text: string) {
-    textNode.innerText = text
-
-    const circleType = new CircleType(
-      textNode,
-      splitter.splitGraphemes.bind(splitter)
-    )
-    circleType.radius(400)
-    // circleType.forceWidth(true)
-
-    const firstLetter: HTMLElement =
-      circleType.element.querySelector("span:first-child")
-
-    if (firstLetter) {
-      // const style: CSSStyleDeclaration = firstLetter.style
-      // console.log(style.getPropertyValue("transform"))
-      const container: HTMLElement = circleType.container
-      // container.style["visibility"] = "hidden"
-      setTimeout(() => {
-        if (firstLetter.attributes["style"]) {
-          const style = firstLetter.attributes["style"].value
-          const rotation = style.match(/rotate\((.+)\)/)[1]
-
-          container.style["transform"] = `rotate(${rotation})`
-          container.style["transform-origin"] = `right bottom`
-        }
-        container.style["visibility"] = "visible"
-        el = circleType.container.cloneNode(true).outerHTML
-      }, 50)
-    }
+  function undoDrawing() {
+    drawing.undo()
   }
 
-  //   // console.log("seese")
-
-  //   // circleType = new CircleType(
-  //   //   textNode,
-  //   //   splitter.splitGraphemes.bind(splitter)
-  //   // )
-  //   // circleType.radius(200).dir(-1)
-  //   circleType.destroy()
-  //   textNode.innerText = e.target.value
-  //   console.log(textNode)
-
-  //   circleType = new CircleType(
-  //     textNode,
-  //     splitter.splitGraphemes.bind(splitter)
-  //   )
-  //   circleType.radius(2000)
-  // }
-
-  // pasteImage.on("paste-image", function (image) {
-  //   avatar = image.src
-  //   setTimeout(() => onAvatarLoad(), 500)
-  // })
+  function clearDrawing() {
+    drawing.clear()
+  }
 
   function onFileSelected(e) {
     let image = e.target.files[0]
@@ -278,9 +95,9 @@
   function downloadImage() {
     saving = true
     htmlToImage
-      .toPng(node)
+      .toJpeg(node)
       .then(function (blob) {
-        saveAs(blob, `${title}.png`)
+        saveAs(blob, `${title}.jpg`)
         saving = false
       })
       .catch(function (error) {
@@ -289,11 +106,9 @@
   }
 
   async function copyImage() {
-    const fontEmbedCSS = await htmlToImage.getFontEmbedCSS(node)
-
     saving = true
     htmlToImage
-      .toPng(node, { fontEmbedCSS })
+      .toPng(node)
       .then(function (dataUrl) {
         let img = new Image()
         img.src = dataUrl
@@ -323,206 +138,34 @@
 <main class="p-12 min-h-screen grid place-content-center gap-4">
   <div class="flex flex-col">
     <h1
-      class="text-6xl mb-4 font-bold text-transparent text-center uppercase bg-clip-text bg-gradient-to-br text-[#71CC00]"
+      class="text-6xl mb-4 font-bold text-transparent text-center uppercase bg-clip-text bg-gradient-to-br text-[#eeeeee]"
     >
-      Working Working Working
+      The Writing On The Wall
     </h1>
   </div>
 
   <div
     bind:this={node}
-    class="flex items-center justify-center relative h-[600px] w-[600px] overflow-hidden mx-auto"
+    class="flex items-center justify-center relative w-[960px] h-[640px] overflow-hidden mx-auto"
     style={`font-family: "${selectedFont}"; background-color: ${bgColor.toHex()}`}
   >
-    <!-- <div class="target text-white p-20 bg-green-400" bind:this={target}>
-      Target
-    </div>
-    <Moveable
-      {target}
-      origin={true}
-      edge={true}
-      draggable={true}
-      on:dragStart={({ detail: e }) => {
-        e.set(frame.translate)
-      }}
-      on:drag={({ detail: e }) => {
-        frame.translate = e.beforeTranslate
-        e.target.style.transform = `translate(${e.beforeTranslate[0]}px, ${e.beforeTranslate[1]}px)`
-      }}
-    /> -->
-    <div class="absolute text-transparent select-none top-[9999px]">
-      <div bind:this={textNode} />
-    </div>
-    <div
-      class="relative"
-      style={`transform: scale(${descriptionSize / 70}) rotate(-2deg)`}
-    >
-      <div
-        class={`relative text-[#71CC00] text-6xl`}
-        style={`transform: translateY(${-spacing}px); color: ${textColor.toHex()}`}
-        bind:this={container}
-      >
-        <div
-          class="element -my-16 select-none"
-          style={`transform: translateY(${
-            spacing * 0
-          }px) rotate(0deg); font-family: "${selectedFont}";`}
-        >
-          {@html el}
-        </div>
-
-        <div
-          class="element -my-16 select-none"
-          style={`transform: translateY(${
-            spacing * 1
-          }px) rotate(-0.5deg); font-family: "${selectedFont}";`}
-        >
-          {@html el}
-        </div>
-
-        <div
-          class="element -my-16 select-none"
-          style={`transform: translateY(${
-            spacing * 2
-          }px) rotate(-0.9deg); font-family: "${selectedFont}";`}
-        >
-          {@html el}
-        </div>
-
-        <div
-          class="relative element -my-16 select-none"
-          style={`transform: translateY(${
-            spacing * 2
-          }px) rotate(-0.9deg); font-family: "${selectedFont}";`}
-        >
-          <span class="invisible">
-            {title}
-          </span>
-          <svg
-            viewBox={`0 0 130 40`}
-            preserveAspectRatio="none"
-            class="absolute top-12 inset-x-0 h-12 w-[105%] overflow-visible"
-            style={`transform: translateY(${
-              spacing * 2 - 36
-            }px); transform-box: fill-box; transform-origin: bottom;`}
-          >
-            <path d={underline} style={`fill: ${textColor.toHex()}`} />
-          </svg>
-        </div>
-
-        <!-- <div class="target bg-[#71CC00] w-60 h-20" bind:this={target} />
-
-        <Moveable
-          {target}
-          warpable={true}
-          renderDirections={["nw", "n", "ne", "w", "e", "sw", "s", "se"]}
-          edge={false}
-          zoom={1}
-          origin={false}
-          padding={{ left: 0, top: 0, right: 0, bottom: 0 }}
-          on:warpStart={({ detail: e }) => {
-            e.set(frame.matrix)
-          }}
-          on:warp={({ detail: e }) => {
-            frame.matrix = e.matrix
-            e.target.style.transform = `translate(${frame.translate[0]}px, ${
-              frame.translate[1]
-            }px) matrix3d(${frame.matrix.join(",")})`
-          }}
-          draggable={true}
-          on:dragStart={({ detail: e }) => {
-            e.set(frame.translate)
-          }}
-          on:drag={({ detail: e }) => {
-            frame.translate = e.beforeTranslate
-            e.target.style.transform = `translate(${frame.translate[0]}px, ${
-              frame.translate[1]
-            }px) matrix3d(${frame.matrix.join(",")})`
-          }}
-        /> -->
-      </div>
-    </div>
-  </div>
-  <div
-    class="flex flex-col gap-3 h-1/4 bottom-[2.5%] left-[2.5%] right-[2.5%] text-white mx-4"
-  >
-    <!-- <h1
-        class="text-4xl mb-2 font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#6215f1] 71CC00-[#1b3efa]"71CC33>
-        {title}
-      </h1> -->
-    <!-- <h1 class="text-4xl mb-2 font-bold text-[#6215f1]">
-        {title}
-      </h1> -->
-
-    <!-- svelte-ignore a11y-autofocus -->
-    <input
-      class={`${
-        saving
-          ? "border-2 border-transparent resize-none"
-          : "border-2 border-[#71CC0088] rounded-xl"
-      } caret-white text-center -top-2 bg-transparent text-4xl font-bold text-[#71CC00] appearance-none rounded w-full leading-tight focus:outline-none focus:border-[#6215f1]`}
-      type="text"
-      autofocus={true}
-      bind:value={title}
-    />
-
-    <!-- Font selections -->
-    <select
-      bind:value={selectedFont}
-      class="text-black px-4 py-2 border rounded text-center mx-auto"
-    >
-      {#each fonts as font}
-        <option value={font}>
-          {font}
-        </option>
-      {/each}
-    </select>
-  </div>
-
-  <!-- <p class="text-white text-center text-sm">
-    วิธีใช้: แก้ไขคำตามใจชอบ เลื่อนภาพด้วยการคลิกที่ภาพแล้วลาก<br
-    />อัปโหลดภาพหรือ Paste ภาพจากคลิปบอร์ด
-  </p>
-
-  <div class="flex gap-8 overflow-hidden text-white items-center">
-    <p class="text-xl w-1/3">ขนาดภาพ</p>
-    <input
-      type="range"
-      min="50"
-      max="200"
-      bind:value={imageZoom}
-      class="slider"
-    />
-  </div> -->
-
-  <div class="flex gap-8 overflow-hidden text-white items-center">
-    <p class="text-xl w-1/3">ขนาดตัวหนังสือ</p>
-    <input
-      type="range"
-      min="50"
-      max="240"
-      bind:value={descriptionSize}
-      class="slider"
-    />
-  </div>
-
-  <div class="flex gap-8 overflow-hidden text-white items-center">
-    <p class="text-xl w-1/3">ระยะบรรทัด</p>
-    <input
-      type="range"
-      min="30"
-      max="200"
-      bind:value={spacingMicro}
-      class="slider"
-    />
+    <img src={bgImage} class="absolute inset-0 w-full h-full" />
+    <div bind:this={drawArea} class="absolute w-full h-full">hi</div>
   </div>
 
   <div class="flex flex-row gap-2">
-    <ColorInput bind:color={textColor} title="สีตัวหนังสือ" />
-    <ColorInput bind:color={bgColor} title="สีพื้นหลัง" />
-  </div>
-
-  <div class="flex flex-row gap-2">
+    <button
+      class="text-black text-center text-xl border-2 border-slate-400 rounded px-2 py-4 basis-full bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] hover:border-[#6215f1]"
+      on:click={undoDrawing}
+    >
+      Undo
+    </button>
+    <button
+      class="text-black text-center text-xl border-2 border-slate-400 rounded px-2 py-4 basis-full bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] hover:border-[#6215f1]"
+      on:click={clearDrawing}
+    >
+      Clear
+    </button>
     <input
       style="display:none"
       type="file"
@@ -531,7 +174,7 @@
       bind:this={fileinput}
     />
     <button
-      class="text-white text-center text-xl border-2 border-slate-400 rounded px-2 py-4 basis-full bg-gradient-to-r from-[#71CC00] to-[#71CC33] hover:border-[#6215f1]"
+      class="text-black text-center text-xl border-2 border-slate-400 rounded px-2 py-4 basis-full bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] hover:border-[#6215f1]"
       on:click={() => {
         downloadImage()
       }}
@@ -539,7 +182,7 @@
       ดาวน์โหลด
     </button>
     <button
-      class="text-white text-center text-xl border-2 border-slate-400 rounded px-2 py-4 basis-full bg-gradient-to-r from-[#71CC00] to-[#71CC33] hover:border-[#6215f1]"
+      class="text-black text-center text-xl border-2 border-slate-400 rounded px-2 py-4 basis-full bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] hover:border-[#6215f1]"
       on:click={copyImage}
     >
       {isCopy ? "Copied" : "คัดลอก"}
@@ -550,29 +193,17 @@
 <!-- Bottom links -->
 <div class="fixed inset-x-0 bottom-16 sm:bottom-4 text-center">
   <a
-    href="https://github.com/narze/working3times"
+    href="https://github.com/narze/the-writing-on-the-wall"
     target="_blank"
-    class="text-white text-sm bg-gradient-to-r from-[#71CC00] to-[#71CC33] px-2 py-1 rounded-md mx-1"
+    class="text-black text-sm bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] px-2 py-1 rounded-md mx-1"
     >Github</a
   >
   <a
     href="https://twitch.narze.live"
     target="_blank"
-    class="text-white text-sm bg-gradient-to-r from-[#71CC00] to-[#71CC33] px-2 py-1 rounded-md mx-1"
+    class="text-black text-sm bg-gradient-to-r from-[#eeeeee] to-[#eeeeee] px-2 py-1 rounded-md mx-1"
     >Twitch</a
   >
-  <a
-    href="https://f0nt.com"
-    target="_blank"
-    class="text-white text-sm bg-gradient-to-r from-[#71CC00] to-[#71CC33] px-2 py-1 rounded-md mx-1"
-    >ฟ้อนต์จาก f0nt.com</a
-  >
-  <!-- <a
-    href="https://www.youtube.com/watch?v=nlQJHIfpaYo"
-    target="_blank"
-    class="text-white text-sm bg-gradient-to-r from-[#71CC00] to-[#71CC33] px-2 py-1 rounded-md mx-1"
-    >Live Code VOD</a
-  > -->
 </div>
 
 <style lang="postcss">
@@ -580,12 +211,6 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     @apply bg-gray-800;
-  }
-
-  .bg {
-    /* background: rgb(98, 21, 241);
-    background: linear-gradient(113deg, #6215f1 0%, #1b3efa 100%); */
-    background-color: black;
   }
 
   .bg-gradient {

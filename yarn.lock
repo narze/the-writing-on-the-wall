@@ -1116,6 +1116,11 @@ svelte@^3.44.0:
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.48.0.tgz#f98c866d45e155bad8e1e88f15f9c03cd28753d3"
   integrity sha512-fN2YRm/bGumvjUpu6yI3BpvZnpIm9I6A7HR4oUNYd7ggYyIwSA/BX7DJ+UXXffLp6XNcUijyLvttbPVCYa/3xQ==
 
+svg-drawing@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/svg-drawing/-/svg-drawing-3.0.0.tgz#9cae226b9b118b53d27b6c0bcb8c9867e2b08cdd"
+  integrity sha512-UvGIol1eFlftDLaIu2P4ZVK/5sSITHyV0bn7l/4AVXO52SYf90hxEF2lMFla0jwDIipf7Cl0MO1YU1Z2ebi8jQ==
+
 tailwindcss@^3.0.23:
   version "3.0.24"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.0.24.tgz#22e31e801a44a78a1d9a81ecc52e13b69d85704d"
